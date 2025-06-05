@@ -58,3 +58,25 @@ int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
 
     return result;
 }
+
+* new expr
+token current_token = get_next_token(answer, t_answer, pos);
+
+  // Parse first number
+  int left = current_token.value;
+  eat(t_answer, pos, NUMBER, answer, current_token);
+
+  // Parse operator
+  Token_Type op = current_token.type;
+  if (op != PLUS && op != MINUS) {
+    std::cerr << "Error: Expected '+' or '-' after number\n";
+    exit(1);
+  }
+  eat(t_answer, pos, op, answer, current_token);
+
+  // Parse second number
+  int right = current_token.value;
+  eat(t_answer, pos, NUMBER, answer, current_token);
+
+  // Evaluate expression
+  return (op == PLUS) ? (left + right) : (left - right);

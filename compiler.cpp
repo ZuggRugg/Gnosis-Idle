@@ -4,16 +4,13 @@
 /////////////////////////////////
 
 // Goals for Today:
-// rewrite to handle whitespace and subtraction, do a rewrite and passover on how it eats tokens
-// then maybe think about how to either split up into different files or whatever else
+// Write a new method to handle multi-digit numbers and then work on multiplication and division
 
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <vector>
 #include <cctype>
-
-#define digits "0123456789"
 
 //data types for tokens
 enum Token_Type {
@@ -30,9 +27,9 @@ struct token {
 };
 
 //function definitions
-token get_token(std::string answer, std::vector<token>& t_answer, size_t& pos);
+token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos);
 int expr(std::vector<token>& t_answer, size_t& pos, std::string answer);
-bool eat(std::vector<token>& t_answer, size_t& pos, Token_Type t, std::string answer, token& current_token);
+void eat(std::vector<token>& t_answer, size_t& pos, Token_Type t, std::string answer, token& current_token);
 const std::string getTokenName(Token_Type t);
 void advance(size_t& pos, std::string answer, char& current);
 void skip_space(char& current, size_t& pos, std::string answer);
@@ -46,7 +43,7 @@ int main(void) {
   std::string answer;
   std::vector<token> t_answer; //vector containing tokens
 
-  std::cout << "Idle_Gnosis> ";
+  std::cout << "\nIdle_Gnosis> ";
   getline(std::cin,answer);
   
   std::cout << "final answer = " << expr(t_answer, pos, answer) << "\n\n";
@@ -60,16 +57,16 @@ const std::string getTokenName(Token_Type t)
 {
   switch (t)
     {
-    case PLUS:   return "PLUS";
+    case PLUS:    return "PLUS";
     case NUMBER:  return "NUMBER";
     case EOF_:    return "EOF_";
-    case MINUS: return "MINUS";
-    default:    return "???";
+    case MINUS:   return "MINUS";
+    default:      return "???";
     }
 }
 
 //iterates through string and classifies each char as a simple token
-token get_token(std::string answer, std::vector<token>& t_answer, size_t& pos) {
+token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos) {
 
   char current = 'l';
   while(current != '\0') {
@@ -91,9 +88,12 @@ token get_token(std::string answer, std::vector<token>& t_answer, size_t& pos) {
 
     //Check if number
     else if(isdigit(current)) { 
-      int number = current - '0';  // Convert char digit to int
+      int number = 0;  // Convert char digit to int
+      while(isdigit(current)) {
+	number = number * 10 + (current - '0');
+	advance(pos, answer, current);
+      }
       t_answer.push_back({NUMBER, number});
-      advance(pos, answer, current);
       return t_answer.back();
     }
 
@@ -124,22 +124,26 @@ void read_all_tokens(std::vector<token>& t_answer) {
 
 // pre-defined expr function to eval expressions like '3+5' or '3 - 6'
 int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
-    token current_token = get_token(answer, t_answer, pos);
-    int result = 0;
-   
-    if(!eat(t_answer, pos, NUMBER, answer, current_token)) { exit(1); }
-    if(!(eat(t_answer, pos, PLUS, answer, current_token) || eat(t_answer, pos, MINUS, answer, current_token))) { exit(1); }
-    if(!eat(t_answer, pos, NUMBER, answer, current_token)) { exit(1); } 
+token current_token = get_next_token(answer, t_answer, pos);
 
-    token left = t_answer[0];
-    token Op = t_answer[1];
-    token right = t_answer[2];
+  // Parse first number
+  int left = current_token.value;
+  eat(t_answer, pos, NUMBER, answer, current_token);
 
-    if(Op.type == PLUS) {
-    result = left.value + right.value;
-    } else { result = left.value - right.value; }
+  // Parse operator
+  Token_Type op = current_token.type;
+  if (op != PLUS && op != MINUS) {
+    std::cerr << "Error: Expected '+' or '-' after number\n";
+    exit(1);
+  }
+  eat(t_answer, pos, op, answer, current_token);
 
-    return result;
+  // Parse second number
+  int right = current_token.value;
+  eat(t_answer, pos, NUMBER, answer, current_token);
+
+  // Evaluate expression
+  return (op == PLUS) ? (left + right) : (left - right);
 }
 
 
@@ -159,15 +163,15 @@ void skip_space(char& current, size_t& pos, std::string answer) {
 
 
 // eat the current token if it matches the expected type
-bool eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::string answer, token& current_token) {
-    if (pos < t_answer.size() || current_token.type == expected) {
-      current_token = get_token(answer, t_answer, pos);
-      return true;
+void eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::string answer, token& current_token) {
+    if (current_token.type == expected) {
+      current_token = get_next_token(answer, t_answer, pos);
     }
+    else {
     std::cout << "\nError: Expected " << getTokenName(expected) << " at position " << pos << "\n";
-    std::cout << "Instead we got " << getTokenName(current_token.type);
-    return false;
+    std::cout << "Instead we got " << getTokenName(current_token.type) << "\n";
+    exit(1);
+    }
 }
-
 
 
