@@ -1,0 +1,37 @@
+* get_tokens
+void get_tokens(std::string rec, std::vector<token>& t_answer) {
+  for (int i = 0; i < rec.length(); i++) {
+    
+    if (rec[i] == '+') { //check if its + operator
+      t_answer.push_back({PLUS, 999});
+    }
+
+    if(isdigit(rec[i])) { 
+      int number = rec[i] - '0';  // Convert char digit to int
+      t_answer.push_back({NUMBER, number});
+    }
+
+    if(rec[i] == ' ') {
+      t_answer.push_back({WHITESPACE, 999});
+    }
+
+    if(i == rec.length()-1) { t_answer.push_back({EOF_, 999}); } // add end of file token
+  }
+
+  //read tokens
+  for(int i = 0; i < t_answer.size(); i++) {
+    std::cout << getTokenName(t_answer[i].type) << " - " << t_answer[i].value << "\n"; 
+  }
+}
+
+
+* bool eat
+// add the out_token variable
+bool eat(std::vector<token>& tokens, size_t& pos, Token_Type expected) {
+    if (pos < tokens.size() && tokens[pos].type == expected) {
+        pos++;
+        return true;
+    }
+    std::cout << "\nError: Expected " << getTokenName(expected) << " at position " << pos << "\n";
+    return false;
+}
