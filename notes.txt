@@ -35,3 +35,26 @@ bool eat(std::vector<token>& tokens, size_t& pos, Token_Type expected) {
     std::cout << "\nError: Expected " << getTokenName(expected) << " at position " << pos << "\n";
     return false;
 }
+
+
+
+* int expr
+int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
+    token current_token = get_token(answer, t_answer, pos);
+    int result = 0;
+
+    if(!eat(t_answer, pos, NUMBER, answer, current_token)) { exit(1); }
+    if(!(eat(t_answer, pos, PLUS, answer, current_token) || eat(t_answer, pos, MINUS, answer, current_token))) { exit(1); }
+    if(!eat(t_answer, pos, NUMBER, answer, current_token)) { exit(1); } 
+
+    token left = t_answer[0];
+    token Op = t_answer[1];
+    token right = t_answer[2];
+
+
+    if(Op.type == PLUS) {
+    result = left.value + right.value;
+    } else { result = left.value - right.value; }
+
+    return result;
+}

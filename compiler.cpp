@@ -50,6 +50,7 @@ int main(void) {
   getline(std::cin,answer);
   
   std::cout << "final answer = " << expr(t_answer, pos, answer) << "\n\n";
+
   read_all_tokens(t_answer);
   }
 }
@@ -70,8 +71,9 @@ const std::string getTokenName(Token_Type t)
 //iterates through string and classifies each char as a simple token
 token get_token(std::string answer, std::vector<token>& t_answer, size_t& pos) {
 
-  char current = answer[pos];
+  char current = 'l';
   while(current != '\0') {
+  current = answer[pos];
 
     //check if its + operator
     if (current == '+') { 
@@ -124,7 +126,7 @@ void read_all_tokens(std::vector<token>& t_answer) {
 int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
     token current_token = get_token(answer, t_answer, pos);
     int result = 0;
-
+   
     if(!eat(t_answer, pos, NUMBER, answer, current_token)) { exit(1); }
     if(!(eat(t_answer, pos, PLUS, answer, current_token) || eat(t_answer, pos, MINUS, answer, current_token))) { exit(1); }
     if(!eat(t_answer, pos, NUMBER, answer, current_token)) { exit(1); } 
@@ -158,11 +160,12 @@ void skip_space(char& current, size_t& pos, std::string answer) {
 
 // eat the current token if it matches the expected type
 bool eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::string answer, token& current_token) {
-    if (pos < t_answer.size() && current_token.type == expected) {
+    if (pos < t_answer.size() || current_token.type == expected) {
       current_token = get_token(answer, t_answer, pos);
       return true;
     }
     std::cout << "\nError: Expected " << getTokenName(expected) << " at position " << pos << "\n";
+    std::cout << "Instead we got " << getTokenName(current_token.type);
     return false;
 }
 
