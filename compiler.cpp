@@ -4,7 +4,8 @@
 /////////////////////////////////
 
 // Goals for Today:
-// Write a new method to handle multi-digit numbers and then work on multiplication and division
+// Work on parentheses, Legumes, and other advanced Grammer parsing
+// expressions like 4+4+5-1
 
 #include <iostream>
 #include <string>
@@ -36,7 +37,8 @@ const std::string getTokenName(Token_Type t);
 void advance(size_t& pos, std::string answer, char& current);
 void skip_space(char& current, size_t& pos, std::string answer);
 const void read_all_tokens(std::vector<token>& t_answer);
-
+const bool isOperator(Token_Type t);
+int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
 
 // main function
 int main(void) {
@@ -132,7 +134,7 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
 
 const void read_all_tokens(std::vector<token>& t_answer) {
   //read tokens
-  for(int i = 0; i < t_answer.size(); i++) {
+  for(size_t i = 0; i < t_answer.size(); i++) {
     std::cout << getTokenName(t_answer[i].type) << " - " << t_answer[i].value << "\n"; 
     }
 }
@@ -140,16 +142,16 @@ const void read_all_tokens(std::vector<token>& t_answer) {
 // pre-defined expr function to eval expressions like '3+5' or '3 - 6'
 int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
 token current_token = get_next_token(answer, t_answer, pos);
- int eval;
+  int eval;
 
   // Parse first number
   int left = current_token.value;
   eat(t_answer, pos, NUMBER, answer, current_token);
 
-  // Parse operator
   Token_Type op = current_token.type;
-  if (op != PLUS && op != MINUS && op != MULTIPLY && op != DIVIDE) {
-    std::cerr << "Error: Expected '+' or '-' after number\n";
+  if (!isOperator(op)) {
+    std::cerr << "Error: Expected operator '+-*/' after number\n";
+    std::cout << "Instead we got " << getTokenName(op) << "\n";
     exit(1);
   }
   eat(t_answer, pos, op, answer, current_token);
@@ -163,9 +165,13 @@ token current_token = get_next_token(answer, t_answer, pos);
   switch(op) {
   case PLUS:      eval = left + right;   break;
   case MINUS:     eval = left - right;   break;
-  case MULTIPLY:   eval = left * right;   break;
+  case MULTIPLY:  eval = left * right;   break;
   case DIVIDE:    eval = left / right;   break;
-}
+
+  default:
+  std::cerr << "\nerror in the switch statement determining the expression\n";
+  exit(1);
+  }
 
   return eval;
 }
@@ -197,3 +203,22 @@ void eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::st
     exit(1);
     }
 }
+
+
+int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
+  eat(t_answer, pos, NUMBER, answer, current_token);
+  return current_token.value;
+}
+
+
+const bool isOperator(Token_Type t) {
+  switch(t) {
+  case PLUS:
+  case MINUS:
+  case MULTIPLY:
+  case DIVIDE:
+  return true;  break;
+  default:  return false; break;
+  }
+}
+

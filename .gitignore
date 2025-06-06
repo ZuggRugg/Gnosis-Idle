@@ -2,4 +2,5 @@
 *.exe
 *.out
 *.org
+first_compile_stage.i
 !README.org
