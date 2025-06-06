@@ -32,12 +32,12 @@ struct token {
 //function definitions
 token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos);
 int expr(std::vector<token>& t_answer, size_t& pos, std::string answer);
-void eat(std::vector<token>& t_answer, size_t& pos, Token_Type t, std::string answer, token& current_token);
+token eat(std::vector<token>& t_answer, size_t& pos, Token_Type t, std::string answer, token current_token);
 const std::string getTokenName(Token_Type t);
 void advance(size_t& pos, std::string answer, char& current);
 void skip_space(char& current, size_t& pos, std::string answer);
-const void read_all_tokens(std::vector<token>& t_answer);
-const bool isOperator(Token_Type t);
+void read_all_tokens(std::vector<token>& t_answer);
+bool isOperator(Token_Type t);
 int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
 
 // main function
@@ -132,7 +132,7 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
 }
 
 
-const void read_all_tokens(std::vector<token>& t_answer) {
+void read_all_tokens(std::vector<token>& t_answer) {
   //read tokens
   for(size_t i = 0; i < t_answer.size(); i++) {
     std::cout << getTokenName(t_answer[i].type) << " - " << t_answer[i].value << "\n"; 
@@ -141,39 +141,28 @@ const void read_all_tokens(std::vector<token>& t_answer) {
 
 // pre-defined expr function to eval expressions like '3+5' or '3 - 6'
 int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
-token current_token = get_next_token(answer, t_answer, pos);
-  int eval;
+ token current_token = get_next_token(answer, t_answer, pos);
+    int result = term(t_answer, pos, answer, current_token);
 
-  // Parse first number
-  int left = current_token.value;
-  eat(t_answer, pos, NUMBER, answer, current_token);
+    while (true) {
+        if (!isOperator(current_token.type)) break;
 
-  Token_Type op = current_token.type;
-  if (!isOperator(op)) {
-    std::cerr << "Error: Expected operator '+-*/' after number\n";
-    std::cout << "Instead we got " << getTokenName(op) << "\n";
-    exit(1);
-  }
-  eat(t_answer, pos, op, answer, current_token);
+        Token_Type op = current_token.type;
+        current_token = eat(t_answer, pos, op, answer, current_token);
 
-  // Parse second number
-  int right = current_token.value;
-  eat(t_answer, pos, NUMBER, answer, current_token);
+        int rhs = term(t_answer, pos, answer, current_token);
 
-  // Evaluate expression
-
-  switch(op) {
-  case PLUS:      eval = left + right;   break;
-  case MINUS:     eval = left - right;   break;
-  case MULTIPLY:  eval = left * right;   break;
-  case DIVIDE:    eval = left / right;   break;
-
-  default:
-  std::cerr << "\nerror in the switch statement determining the expression\n";
-  exit(1);
-  }
-
-  return eval;
+        switch (op) {
+            case PLUS:       result += rhs;       break;
+            case MINUS:      result -= rhs;       break;
+            case MULTIPLY:   result *= rhs;       break;
+            case DIVIDE:     result /= rhs;       break;
+            default:
+                std::cerr << "Unexpected operator\n";
+                exit(1);
+        }
+    }
+    return result;
 }
 
 
@@ -193,9 +182,10 @@ void skip_space(char& current, size_t& pos, std::string answer) {
 
 
 // eat the current token if it matches the expected type
-void eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::string answer, token& current_token) {
+token eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::string answer, token current_token) {
     if (current_token.type == expected) {
       current_token = get_next_token(answer, t_answer, pos);
+      return current_token;
     }
     else {
     std::cout << "\nError: Expected " << getTokenName(expected) << " at position " << pos << "\n";
@@ -206,12 +196,13 @@ void eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::st
 
 
 int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
-  eat(t_answer, pos, NUMBER, answer, current_token);
-  return current_token.value;
+  int v = current_token.value;
+  current_token = eat(t_answer, pos, NUMBER, answer, current_token);
+  return v;
 }
 
 
-const bool isOperator(Token_Type t) {
+bool isOperator(Token_Type t) {
   switch(t) {
   case PLUS:
   case MINUS:

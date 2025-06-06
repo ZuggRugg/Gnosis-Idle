@@ -1,5 +1,5 @@
 # TODO
-- [ ] preform an arbitrary amount of calculations like '3+4-8*5'
+- [x] preform an arbitrary amount of calculations like '3+4-8*5'
 - [ ] Recognize left and right parentheses and Operator Precedence
 - [ ] Rewrite and modularize everything
 - [ ] Create Abstract Syntax Tree (eval complex expressions)

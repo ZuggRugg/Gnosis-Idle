@@ -60,23 +60,46 @@ int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
 }
 
 * new expr
-token current_token = get_next_token(answer, t_answer, pos);
+  int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
+    int result;
 
-  // Parse first number
-  int left = current_token.value;
-  eat(t_answer, pos, NUMBER, answer, current_token);
+    // set current token to the first token taken from the input
+    token current_token = get_next_token(answer, t_answer, pos);
 
-  // Parse operator
-  Token_Type op = current_token.type;
-  if (op != PLUS && op != MINUS) {
-    std::cerr << "Error: Expected '+' or '-' after number\n";
-    exit(1);
-  }
-  eat(t_answer, pos, op, answer, current_token);
+    result = term();
+    while (isOperator(current_token.type)) {
+        token t = current_token
 
-  // Parse second number
-  int right = current_token.value;
-  eat(t_answer, pos, NUMBER, answer, current_token);
+        if (token.type == PLUS)
+            eat(PLUS)
+            result = result + term();
+        elif(token.type == MINUS)
+            eat(MINUS)
+	    result = result - term();
+	    }	    
+}
 
-  // Evaluate expression
-  return (op == PLUS) ? (left + right) : (left - right);
+
+* new expr
+ token current_token = get_next_token();
+    int result = term(...);
+
+    while (true) {
+        if (!isOperator(current_token.type)) break;
+
+        Token_Type op = current_token.type;
+        current_token = eat(...);
+
+        int rhs = term(...);
+
+        switch (op) {
+            case PLUS: result += rhs; break;
+            case MINUS: result -= rhs; break;
+            case MULTIPLY: result *= rhs; break;
+            case DIVIDE: result /= rhs; break;
+            default:
+                std::cerr << "Unexpected operator\n";
+                exit(1);
+        }
+    }
+    return result;
