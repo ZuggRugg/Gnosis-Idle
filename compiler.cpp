@@ -51,8 +51,9 @@ int main(void) {
   std::cout << "\nIdle_Gnosis> ";
   getline(std::cin,answer);
   if(answer == "quit") { exit(1); }
-  
-  std::cout << "final answer = " << expr(t_answer, pos, answer) << "\n\n";
+
+  int result = expr(t_answer, pos, answer);
+  std::cout << "final answer = " << result << "\n\n";
 
   read_all_tokens(t_answer);
   }
@@ -76,7 +77,8 @@ const std::string getTokenName(Token_Type t)
 token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos) {
 
   char current = 'l';
-  while(current != '\0') {
+
+  while(1) {
   current = answer[pos];
 
   if (current == '+') { 
@@ -85,19 +87,19 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
     return t_answer.back();
   }
 
-  if (current == '-') { 
+  else if (current == '-') { 
     t_answer.push_back({MINUS, 999});
     advance(pos, answer, current);
     return t_answer.back();
   }
 
-  if (current == '*') { 
+  else if (current == '*') { 
     t_answer.push_back({MULTIPLY, 999});
     advance(pos, answer, current);
     return t_answer.back();
   }
 
-  if (current == '/') { 
+  else if (current == '/') { 
     t_answer.push_back({DIVIDE, 999});
     advance(pos, answer, current);
     return t_answer.back();
@@ -120,15 +122,18 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
       continue;
     }
 
+    else if(current == '\0') {
+      t_answer.push_back({EOF_, 999}); 
+      return t_answer.back();
+    }
+
+
     // for unknown token
     else { 
-      advance(pos, answer, current);
+      std::cerr << "\nUnknown token discovered cannot parse\n";
+      exit(1);
     }    
   }
-
-  //add eof token
-  t_answer.push_back({EOF_, 999}); 
-  return t_answer.back();
 }
 
 
