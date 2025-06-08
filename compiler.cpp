@@ -4,8 +4,7 @@
 /////////////////////////////////
 
 // Goals for Today:
-// Work on parentheses, Legumes, and other advanced Grammer parsing
-// add rparen and lparen 
+// start creating functions like pow()?
 
 #include <iostream>
 #include <string>
@@ -34,7 +33,7 @@ struct token {
 
 //function definitions
 token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos);
-int expr(std::vector<token>& t_answer, size_t& pos, std::string answer);
+int expr(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
 token eat(std::vector<token>& t_answer, size_t& pos, Token_Type t, std::string answer, token current_token);
 const std::string getTokenName(Token_Type t);
 void advance(size_t& pos, std::string answer, char& current);
@@ -43,7 +42,7 @@ void read_all_tokens(std::vector<token>& t_answer);
 bool isOperator(Token_Type t);
 int factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
 int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
-
+				
 // main function
 int main(void) {
   while(1) {
@@ -56,7 +55,8 @@ int main(void) {
   getline(std::cin,answer);
   if(answer == "quit") { exit(1); }
 
-  int result = expr(t_answer, pos, answer);
+  token current_token = get_next_token(answer, t_answer, pos);
+  int result = expr(t_answer, pos, answer, current_token);
   std::cout << "final answer = " << result << "\n\n";
 
   read_all_tokens(t_answer);
@@ -165,8 +165,7 @@ void read_all_tokens(std::vector<token>& t_answer) {
 }
 
 // pre-defined expr function to eval expressions like '3+5' or '3 - 6'
-int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
-    token current_token = get_next_token(answer, t_answer, pos);
+int expr(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
     int result = term(t_answer, pos, answer, current_token);
 
     while(current_token.type == PLUS || current_token.type == MINUS) {
@@ -215,8 +214,21 @@ token eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::s
 
 int factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
   int v = current_token.value;
+
+  if(current_token.type == NUMBER) {
   current_token = eat(t_answer, pos, NUMBER, answer, current_token);
   return v;
+  }
+  
+  // handles parentheses
+  else if(current_token.type == LPAREN) {
+  current_token = eat(t_answer, pos, LPAREN, answer, current_token);
+  v = expr(t_answer, pos, answer, current_token);
+  current_token = eat(t_answer, pos, RPAREN, answer, current_token);
+  return v;
+  }
+
+  else { std::cerr << "Error!";  exit(1);}
 }
 
 int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
@@ -236,7 +248,6 @@ int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& c
 
   return result;
 }
-
 
 bool isOperator(Token_Type t) {
   switch(t) {
