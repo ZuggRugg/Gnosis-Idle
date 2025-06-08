@@ -1,3 +1,16 @@
+* how term and operator precedence works
+- term deals with multiplying and dividing
+- new method called factor which returns current_token.value and then eats token
+- the expr function now again deals with plus and minus operators
+     expr   : term ((PLUS | MINUS) term)*
+     term   : factor ((MUL | DIV) factor)*
+     factor : INTEGER      
+
+     expr -> term -> factor
+     where expr immediatly hands it off to term which checks the higher precedence first
+     then hands it back to expr to check the lower precedence operators.
+     the factor() method is used to check for Integer/Numbers then eat the current_token    
+
 * get_tokens
 void get_tokens(std::string rec, std::vector<token>& t_answer) {
   for (int i = 0; i < rec.length(); i++) {
@@ -58,28 +71,7 @@ int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
 
     return result;
 }
-
-* new expr
-  int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
-    int result;
-
-    // set current token to the first token taken from the input
-    token current_token = get_next_token(answer, t_answer, pos);
-
-    result = term();
-    while (isOperator(current_token.type)) {
-        token t = current_token
-
-        if (token.type == PLUS)
-            eat(PLUS)
-            result = result + term();
-        elif(token.type == MINUS)
-            eat(MINUS)
-	    result = result - term();
-	    }	    
-}
-
-
+	
 * new expr
  token current_token = get_next_token();
     int result = term(...);
@@ -103,3 +95,5 @@ int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
         }
     }
     return result;
+
+

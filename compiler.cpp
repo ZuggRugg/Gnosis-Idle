@@ -5,7 +5,7 @@
 
 // Goals for Today:
 // Work on parentheses, Legumes, and other advanced Grammer parsing
-// expressions like 4+4+5-1
+// add rparen and lparen and operator precedence
 
 #include <iostream>
 #include <string>
@@ -20,6 +20,8 @@ enum Token_Type {
   MINUS,
   MULTIPLY,
   DIVIDE,
+  LPAREN,
+  RPAREN,
   EOF_
 };
 
@@ -38,6 +40,7 @@ void advance(size_t& pos, std::string answer, char& current);
 void skip_space(char& current, size_t& pos, std::string answer);
 void read_all_tokens(std::vector<token>& t_answer);
 bool isOperator(Token_Type t);
+int factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
 int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
 
 // main function
@@ -69,6 +72,8 @@ const std::string getTokenName(Token_Type t)
     case MINUS:     return "MINUS";
     case MULTIPLY:  return "MULTIPLY";
     case DIVIDE:    return "DIVIDE";
+    case LPAREN:    return "LPAREN";
+    case RPAREN:    return "RPAREN";
     default:        return "???";
     }
 }
@@ -76,34 +81,47 @@ const std::string getTokenName(Token_Type t)
 //iterates through string and classifies each char as a simple token
 token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos) {
 
-  char current = 'l';
+  char current = '1';
 
   while(1) {
-  current = answer[pos];
+    current = answer[pos];
 
-  if (current == '+') { 
-    t_answer.push_back({PLUS, 999});
-    advance(pos, answer, current);
-    return t_answer.back();
+    if (current == '+') { 
+      t_answer.push_back({PLUS, 999});
+      advance(pos, answer, current);
+      return t_answer.back();
+    }
+
+    else if (current == '-') { 
+      t_answer.push_back({MINUS, 999});
+      advance(pos, answer, current);
+      return t_answer.back();
+    }
+
+    else if (current == '*') { 
+      t_answer.push_back({MULTIPLY, 999});
+      advance(pos, answer, current);
+      return t_answer.back();
+    }
+
+    else if (current == '/') { 
+      t_answer.push_back({DIVIDE, 999});
+      advance(pos, answer, current);
+      return t_answer.back();
+    }
+
+    else if (current == '(') { 
+      t_answer.push_back({LPAREN, 999});
+      advance(pos, answer, current);
+      return t_answer.back();
+    }
+
+    else if (current == ')') { 
+      t_answer.push_back({RPAREN, 999});
+      advance(pos, answer, current);
+      return t_answer.back();
   }
 
-  else if (current == '-') { 
-    t_answer.push_back({MINUS, 999});
-    advance(pos, answer, current);
-    return t_answer.back();
-  }
-
-  else if (current == '*') { 
-    t_answer.push_back({MULTIPLY, 999});
-    advance(pos, answer, current);
-    return t_answer.back();
-  }
-
-  else if (current == '/') { 
-    t_answer.push_back({DIVIDE, 999});
-    advance(pos, answer, current);
-    return t_answer.back();
-  }
 
     //Check if number
     else if(isdigit(current)) { 
@@ -146,27 +164,20 @@ void read_all_tokens(std::vector<token>& t_answer) {
 
 // pre-defined expr function to eval expressions like '3+5' or '3 - 6'
 int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
- token current_token = get_next_token(answer, t_answer, pos);
+    token current_token = get_next_token(answer, t_answer, pos);
     int result = term(t_answer, pos, answer, current_token);
 
-    while (true) {
-        if (!isOperator(current_token.type)) break;
-
-        Token_Type op = current_token.type;
-        current_token = eat(t_answer, pos, op, answer, current_token);
-
-        int rhs = term(t_answer, pos, answer, current_token);
-
-        switch (op) {
-            case PLUS:       result += rhs;       break;
-            case MINUS:      result -= rhs;       break;
-            case MULTIPLY:   result *= rhs;       break;
-            case DIVIDE:     result /= rhs;       break;
-            default:
-                std::cerr << "Unexpected operator\n";
-                exit(1);
-        }
+    while(current_token.type == PLUS || current_token.type == MINUS) {
+      if(current_token.type == PLUS) {
+	current_token = eat(t_answer, pos, PLUS, answer, current_token);
+	result = result + term(t_answer, pos, answer, current_token);
+      }
+      else if(current_token.type == MINUS) {
+	current_token = eat(t_answer, pos, MINUS, answer, current_token);
+	result = result - term(t_answer, pos, answer, current_token);
+      }
     }
+
     return result;
 }
 
@@ -200,10 +211,28 @@ token eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::s
 }
 
 
-int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
+int factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
   int v = current_token.value;
   current_token = eat(t_answer, pos, NUMBER, answer, current_token);
   return v;
+}
+
+int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
+  int result = factor(t_answer, pos, answer, current_token);
+ 
+  while(current_token.type == MULTIPLY || current_token.type == DIVIDE) {
+    if(current_token.type == MULTIPLY) {
+      current_token = eat(t_answer, pos, MULTIPLY, answer, current_token);
+      result = result * factor(t_answer, pos, answer, current_token);
+    } 
+
+    else if(current_token.type == DIVIDE) { 
+      current_token = eat(t_answer, pos, DIVIDE, answer, current_token);
+      result = result / factor(t_answer, pos, answer, current_token);      
+    }
+  }
+
+  return result;
 }
 
 
@@ -212,9 +241,8 @@ bool isOperator(Token_Type t) {
   case PLUS:
   case MINUS:
   case MULTIPLY:
-  case DIVIDE:
+  case DIVIDE: 
   return true;  break;
   default:  return false; break;
   }
 }
-
