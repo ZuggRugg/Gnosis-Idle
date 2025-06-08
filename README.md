@@ -1,9 +1,12 @@
 # TODO
 - [x] preform an arbitrary amount of calculations like '3+4-8*5'
-- [ ] Recognize left and right parentheses and Operator Precedence
+- [x] Recognize left and right parentheses and Operator Precedence
+- [ ] Handle Floating point numbers and variables
 - [ ] Rewrite and modularize everything
 - [ ] Create Abstract Syntax Tree (eval complex expressions)
 - [ ] Create Basic GUI (Window, Buttons, Camera)
+- [ ] create basic gameplay loop
+
 
 # Description
 This is a project where I am building a compiler/interpreter from scratch for an idle game 
