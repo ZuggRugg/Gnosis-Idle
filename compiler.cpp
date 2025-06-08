@@ -5,13 +5,14 @@
 
 // Goals for Today:
 // Work on parentheses, Legumes, and other advanced Grammer parsing
-// add rparen and lparen and operator precedence
+// add rparen and lparen 
 
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <vector>
 #include <cctype>
+#include <iomanip>
 
 //data types for tokens
 enum Token_Type {
@@ -158,7 +159,8 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
 void read_all_tokens(std::vector<token>& t_answer) {
   //read tokens
   for(size_t i = 0; i < t_answer.size(); i++) {
-    std::cout << getTokenName(t_answer[i].type) << " - " << t_answer[i].value << "\n"; 
+    std::cout << std::left << std::setw(10) << getTokenName(t_answer[i].type) <<  
+    std::right << std::setw(10) << t_answer[i].value << "\n"; 
     }
 }
 
