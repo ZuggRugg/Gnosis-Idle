@@ -20,28 +20,31 @@ enum Token_Type {
   MINUS,
   MULTIPLY,
   DIVIDE,
+  DOT,
   LPAREN,
   RPAREN,
+  UNARY_POS,
+  UNARY_NEG,
   EOF_
 };
 
 //token struct
 struct token {
   Token_Type type;
-  int value;
+  float value;
 };
 
 //function definitions
 token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos);
-int expr(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
+float expr(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
 token eat(std::vector<token>& t_answer, size_t& pos, Token_Type t, std::string answer, token current_token);
 const std::string getTokenName(Token_Type t);
 void advance(size_t& pos, std::string answer, char& current);
 void skip_space(char& current, size_t& pos, std::string answer);
 void read_all_tokens(std::vector<token>& t_answer);
 bool isOperator(Token_Type t);
-int factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
-int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
+float factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
+float term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
 				
 // main function
 int main(void) {
@@ -56,7 +59,7 @@ int main(void) {
   if(answer == "quit") { exit(1); }
 
   token current_token = get_next_token(answer, t_answer, pos);
-  int result = expr(t_answer, pos, answer, current_token);
+  float result = expr(t_answer, pos, answer, current_token);
   std::cout << "final answer = " << result << "\n\n";
 
   read_all_tokens(t_answer);
@@ -75,6 +78,9 @@ const std::string getTokenName(Token_Type t)
     case DIVIDE:    return "DIVIDE";
     case LPAREN:    return "LPAREN";
     case RPAREN:    return "RPAREN";
+    case DOT:       return "DOT";
+    case UNARY_POS: return "UNARY_POS";
+    case UNARY_NEG: return "UNARY_NEG";
     default:        return "???";
     }
 }
@@ -125,12 +131,28 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
 
 
     //Check if number
+
+    // TODO: Convert from int to string and add chars then cast to float or double? 
+
     else if(isdigit(current)) { 
-      int number = 0;  // Convert char digit to int
-      while(isdigit(current)) {
-	number = number * 10 + (current - '0'); // convert multiple digits
+      float number = 0;  // Convert char digit to int
+      std::string num_expr; //array of chars that gets converted to float?
+
+      while(isdigit(current) || current == '.') {
+
+	if(isdigit(current)) {
+	num_expr += current;
 	advance(pos, answer, current);
+	}
+	
+	else if(current == '.') {
+	num_expr += current;
+	advance(pos, answer, current);
+	}
+
       }
+
+      number = std::stof(num_expr);
       t_answer.push_back({NUMBER, number});
       return t_answer.back();
     }
@@ -165,8 +187,8 @@ void read_all_tokens(std::vector<token>& t_answer) {
 }
 
 // pre-defined expr function to eval expressions like '3+5' or '3 - 6'
-int expr(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
-    int result = term(t_answer, pos, answer, current_token);
+float expr(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
+    float result = term(t_answer, pos, answer, current_token);
 
     while(current_token.type == PLUS || current_token.type == MINUS) {
       if(current_token.type == PLUS) {
@@ -212,8 +234,8 @@ token eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::s
 }
 
 
-int factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
-  int v = current_token.value;
+float factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
+  float v = current_token.value;
 
   if(current_token.type == NUMBER) {
   current_token = eat(t_answer, pos, NUMBER, answer, current_token);
@@ -231,8 +253,8 @@ int factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token&
   else { std::cerr << "Error!";  exit(1);}
 }
 
-int term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
-  int result = factor(t_answer, pos, answer, current_token);
+float term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
+  float result = factor(t_answer, pos, answer, current_token);
  
   while(current_token.type == MULTIPLY || current_token.type == DIVIDE) {
     if(current_token.type == MULTIPLY) {
