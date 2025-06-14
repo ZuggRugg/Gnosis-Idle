@@ -1,7 +1,7 @@
 # TODO
 - [x] preform an arbitrary amount of calculations like '3+4-8*5'
 - [x] Recognize left and right parentheses and Operator Precedence
-- [ ] Handle Floating point numbers and variables
+- [x] Handle Floating point numbers and variables
 - [ ] Rewrite and modularize everything
 - [ ] Create Abstract Syntax Tree (eval complex expressions)
 - [ ] Create Basic GUI (Window, Buttons, Camera)
