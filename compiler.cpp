@@ -130,10 +130,6 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
   }
 
 
-    //Check if number
-
-    // TODO: Convert from int to string and add chars then cast to float or double? 
-
     else if(isdigit(current)) { 
       float number = 0;  // Convert char digit to int
       std::string num_expr; //array of chars that gets converted to float?

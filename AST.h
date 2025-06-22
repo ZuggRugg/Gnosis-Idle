@@ -5,18 +5,19 @@
 
 
 struct Node {
-  char value;
+  char op;
+  Node* left;
+  Node* right;
 };
 
 
 class AST  {
 private:
   Node next;
+
 public:
   AST();
 };
 
 
-
-
-#endif AST_H
+#endif 

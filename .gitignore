@@ -2,5 +2,7 @@
 *.exe
 *.out
 *.org
-first_compile_stage.i
+a-compiler.ii
+a-compiler.o
+a-compiler.s 
 !README.org

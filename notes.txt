@@ -1,3 +1,17 @@
+* Structure of the Project | Modularize
+- Break up the compiler.cpp file into Lexer/Parser/Interpreter
+
+- Develop the Abstract Syntax Tree fully and integrate
+
+- make Main file where everything is executed
+  
+Lexer has the Tokens and the functions related to Get_next_token()
+Parser has stuff related to eat(), term(), factor(), and expr()
+Interpreter has new functions around AST, interacts with parser.
+
+
+
+
 * how term and operator precedence works
 - term deals with multiplying and dividing
 - new method called factor which returns current_token.value and then eats token
