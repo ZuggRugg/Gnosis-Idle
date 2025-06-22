@@ -23,8 +23,6 @@ enum Token_Type {
   DOT,
   LPAREN,
   RPAREN,
-  UNARY_POS,
-  UNARY_NEG,
   MODULO,
   EOF_
 };
@@ -239,6 +237,17 @@ token eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::s
 
 
 float factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
+
+  if (current_token.type == PLUS) {
+    current_token = eat(t_answer, pos, PLUS, answer, current_token);
+    return +factor(t_answer, pos, answer, current_token);
+  }
+
+  if (current_token.type == MINUS) {
+    current_token = eat(t_answer, pos, MINUS, answer, current_token);
+    return -factor(t_answer, pos, answer, current_token);
+  }
+
   float v = current_token.value;
 
   if(current_token.type == NUMBER) {
