@@ -14,12 +14,9 @@ struct Node {
 class AST  {
 private:
   Node root;
-  
 
 public:
   AST();
-  void addNode();
-  
 };
 
 

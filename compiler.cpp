@@ -25,6 +25,7 @@ enum Token_Type {
   RPAREN,
   UNARY_POS,
   UNARY_NEG,
+  MODULO,
   EOF_
 };
 
@@ -81,6 +82,7 @@ const std::string getTokenName(Token_Type t)
     case DOT:       return "DOT";
     case UNARY_POS: return "UNARY_POS";
     case UNARY_NEG: return "UNARY_NEG";
+    case MODULO:    return "MODULO";
     default:        return "???";
     }
 }
@@ -113,6 +115,12 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
 
     else if (current == '/') { 
       t_answer.push_back({DIVIDE, 999});
+      advance(pos, answer, current);
+      return t_answer.back();
+    }
+
+    if (current == '%') { 
+      t_answer.push_back({MODULO, 999});
       advance(pos, answer, current);
       return t_answer.back();
     }
@@ -252,7 +260,7 @@ float factor(std::vector<token>& t_answer, size_t& pos, std::string answer, toke
 float term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
   float result = factor(t_answer, pos, answer, current_token);
  
-  while(current_token.type == MULTIPLY || current_token.type == DIVIDE) {
+  while(current_token.type == MULTIPLY || current_token.type == DIVIDE || current_token.type == MODULO) {
     if(current_token.type == MULTIPLY) {
       current_token = eat(t_answer, pos, MULTIPLY, answer, current_token);
       result = result * factor(t_answer, pos, answer, current_token);
@@ -262,6 +270,12 @@ float term(std::vector<token>& t_answer, size_t& pos, std::string answer, token&
       current_token = eat(t_answer, pos, DIVIDE, answer, current_token);
       result = result / factor(t_answer, pos, answer, current_token);      
     }
+
+    else if(current_token.type == MODULO) { 
+      current_token = eat(t_answer, pos, MODULO, answer, current_token);
+      result = static_cast<int>(result) % (int)factor(t_answer, pos, answer, current_token);      
+    }
+
   }
 
   return result;
@@ -272,7 +286,8 @@ bool isOperator(Token_Type t) {
   case PLUS:
   case MINUS:
   case MULTIPLY:
-  case DIVIDE: 
+  case DIVIDE:
+  case MODULO:
   return true;  break;
   default:  return false; break;
   }
