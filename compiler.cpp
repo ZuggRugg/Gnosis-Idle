@@ -49,31 +49,36 @@ void read_file(std::vector<std::string>& prompts);
 		
 // main function 
 int main(void) {
-
-  std::vector<std::string> prompts;
-  read_file(prompts);
-
-  while(1) {
-  size_t pos = 0;
-
-  std::string answer;
   std::vector<token> t_answer; //vector containing tokens
+  size_t pos = 0;
+  std::vector<std::string> prompts;
 
-  std::cout << "\nGnosis Idle> ";
-  getline(std::cin,answer);
-  if(answer == "quit") { exit(1); }
+  read_file(prompts);
+  std::cout << "\n";
 
-  token current_token = get_next_token(answer, t_answer, pos);
-  float result = expr(t_answer, pos, answer, current_token);
-  std::cout << "final answer = " << result << "\n\n";
-
-  read_all_tokens(t_answer);
+  for(int i = 0; i < prompts.size(); i++) {
+    pos = 0;
+    token current_token = get_next_token(prompts[i], t_answer, pos);
+    float result = expr(t_answer, pos, prompts[i], current_token);
+    std::cout << i << ") " << prompts[i] << " = " << result << "\n";
+    t_answer.clear();
   }
+
+  
+  // while(1) {
+  //   // std::string answer;
+  //   // std::cout << "\nGnosis Idle> ";
+  //   // getline(std::cin,answer);
+  //   // if(answer == "quit") { exit(1); }
+  //   token current_token = get_next_token(answer, t_answer, pos);
+  //   float result = expr(t_answer, pos, answer, current_token);
+  //   std::cout << "final answer = " << result << "\n\n";
+  //   read_all_tokens(t_answer);
 }
 
 
-void read_file(std::vector<std::string>& prompts) {
 
+void read_file(std::vector<std::string>& prompts) {
   std::string line;
   std::ifstream fin("prompts.txt");
 
@@ -284,7 +289,9 @@ float factor(std::vector<token>& t_answer, size_t& pos, std::string answer, toke
   }
 
   // if no condition satisfied then error
-  else { std::cerr << "Error!";  exit(1);}
+  else { std::cerr << "Error!"; 
+    read_all_tokens(t_answer);
+    exit(1);}
 }
 
 // Handles Multiplying, Division and Modulo Operators
