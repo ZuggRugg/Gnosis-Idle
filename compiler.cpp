@@ -12,6 +12,7 @@
 #include <vector>
 #include <cctype>
 #include <iomanip>
+#include <fstream>
 
 //data types for tokens
 enum Token_Type {
@@ -44,16 +45,21 @@ void read_all_tokens(std::vector<token>& t_answer);
 bool isOperator(Token_Type t);
 float factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
 float term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
-				
-// main function
+void read_file(std::vector<std::string>& prompts);
+		
+// main function 
 int main(void) {
+
+  std::vector<std::string> prompts;
+  read_file(prompts);
+
   while(1) {
   size_t pos = 0;
 
   std::string answer;
   std::vector<token> t_answer; //vector containing tokens
 
-  std::cout << "\nIdle_Gnosis> ";
+  std::cout << "\nGnosis Idle> ";
   getline(std::cin,answer);
   if(answer == "quit") { exit(1); }
 
@@ -64,6 +70,22 @@ int main(void) {
   read_all_tokens(t_answer);
   }
 }
+
+
+void read_file(std::vector<std::string>& prompts) {
+
+  std::string line;
+  std::ifstream fin("prompts.txt");
+
+  if(fin.is_open()) {
+    while(getline(fin, line)) {
+      prompts.push_back(line);
+    }
+    fin.close();
+  }
+}
+
+
 
 const std::string getTokenName(Token_Type t)
 {
@@ -78,8 +100,6 @@ const std::string getTokenName(Token_Type t)
     case LPAREN:    return "LPAREN";
     case RPAREN:    return "RPAREN";
     case DOT:       return "DOT";
-    case UNARY_POS: return "UNARY_POS";
-    case UNARY_NEG: return "UNARY_NEG";
     case MODULO:    return "MODULO";
     default:        return "???";
     }
@@ -170,7 +190,6 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
       return t_answer.back();
     }
 
-
     // for unknown token
     else { 
       std::cerr << "\nUnknown token discovered cannot parse\n";
@@ -179,9 +198,8 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
   }
 }
 
-
+//read tokens
 void read_all_tokens(std::vector<token>& t_answer) {
-  //read tokens
   for(size_t i = 0; i < t_answer.size(); i++) {
     std::cout << std::left << std::setw(10) << getTokenName(t_answer[i].type) <<  
     std::right << std::setw(10) << t_answer[i].value << "\n"; 
@@ -238,11 +256,13 @@ token eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::s
 
 float factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
 
+  //handle positive sign
   if (current_token.type == PLUS) {
     current_token = eat(t_answer, pos, PLUS, answer, current_token);
     return +factor(t_answer, pos, answer, current_token);
   }
 
+  //handle negative sign
   if (current_token.type == MINUS) {
     current_token = eat(t_answer, pos, MINUS, answer, current_token);
     return -factor(t_answer, pos, answer, current_token);
@@ -263,9 +283,11 @@ float factor(std::vector<token>& t_answer, size_t& pos, std::string answer, toke
   return v;
   }
 
+  // if no condition satisfied then error
   else { std::cerr << "Error!";  exit(1);}
 }
 
+// Handles Multiplying, Division and Modulo Operators
 float term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token) {
   float result = factor(t_answer, pos, answer, current_token);
  
