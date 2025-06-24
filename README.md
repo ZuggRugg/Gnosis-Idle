@@ -3,19 +3,23 @@
 - [x] Recognize left and right parentheses and Operator Precedence
 - [x] Handle Floating point numbers and variables
 - [x] Add support for Pos/Neg signs
+- [x] Added support for profiling
+- [ ] add support for Matrices
+- [ ] add support for functions
 - [ ] Rewrite and modularize everything
-- [ ] Create Abstract Syntax Tree (eval complex expressions)
 - [ ] Create Basic GUI (Window, Buttons, Camera)
 - [ ] create basic gameplay loop
-
+- [ ] create graphs and show optimization techniques used
 
 # Description
 This is a project where I am building a compiler/interpreter from scratch for an idle game 
-It will also use raylib as the graphics library for the game itself
+It will also use Raylib as the graphics library for the game itself, One of the main goals behind the project is to learn
+more about code optimization through tools like profilers and techniques like loop unrolling
 
-## Gameplay
+## Gameplay Ideas
 You will get randomized choices on how to improve your equation for the game, but might also have to choose which equations
-would be the least detrimental for you in the long run.
+would be the least detrimental for you in the long run, The Game would start preforming thousands of calculations through the Interpreter
+with an Option to run the Program through an Input file to see how Optimized the Code is
 
 ## Implementation 
-This Project requires C++11 or greater.
+This Project requires C++11 or greater, and Raylib as a dependency

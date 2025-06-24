@@ -113,7 +113,7 @@ const std::string getTokenName(Token_Type t)
 //iterates through string and classifies each char as a simple token
 token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos) {
 
-  char current = '1';
+  char current = '0';
 
   while(1) {
     current = answer[pos];
@@ -142,7 +142,7 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
       return t_answer.back();
     }
 
-    if (current == '%') { 
+    else if (current == '%') { 
       t_answer.push_back({MODULO, 999});
       advance(pos, answer, current);
       return t_answer.back();
