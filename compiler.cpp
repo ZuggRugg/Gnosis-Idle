@@ -14,6 +14,8 @@
 #include <cctype>
 #include <iomanip>
 #include <fstream>
+
+// for generating random expr and writing to the file
 #include "rand_expr.h"
 
 //data types for tokens
@@ -51,7 +53,11 @@ void read_file(std::vector<std::string>& prompts);
 		
 // main function 
 int main(void) {
+
+  rand_func::Main(); // generate new prompts (5000 lines)
+
   std::vector<token> t_answer; //vector containing tokens
+
   size_t pos = 0;
   std::vector<std::string> prompts;
 
