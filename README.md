@@ -3,13 +3,13 @@
 - [x] Recognize left and right parentheses and Operator Precedence
 - [x] Handle Floating point numbers and variables
 - [x] Add support for Pos/Neg signs
-- [x] Added support for profiling
 - [ ] add support for Matrices
 - [ ] add support for functions
 - [ ] Rewrite and modularize everything
+- [ ] Generate random math expressions
 - [ ] Create Basic GUI (Window, Buttons, Camera)
 - [ ] create basic gameplay loop
-- [ ] create graphs and show optimization techniques used
+- [ ] show flame graphs and profiler
 
 # Description
 This is a project where I am building a compiler/interpreter from scratch for an idle game 

@@ -1,14 +1,10 @@
 * Structure of the Project | Modularize
-- Break up the compiler.cpp file into Lexer/Parser/Interpreter
-
-- Develop the Abstract Syntax Tree fully and integrate
-
-- make Main file where everything is executed
+//TODO: Break up the compiler.cpp file into Lexer/Parser/Interpreter
+//TODO: Make Main file where everything is executed
   
 Lexer has the Tokens and the functions related to Get_next_token()
 Parser has stuff related to eat(), term(), factor(), and expr()
 Interpreter has new functions around AST, interacts with parser.
-
 
 
 
@@ -24,6 +20,8 @@ Interpreter has new functions around AST, interacts with parser.
      where expr immediatly hands it off to term which checks the higher precedence first
      then hands it back to expr to check the lower precedence operators.
      the factor() method is used to check for Integer/Numbers then eat the current_token    
+
+
 
 * get_tokens
 void get_tokens(std::string rec, std::vector<token>& t_answer) {
@@ -50,64 +48,5 @@ void get_tokens(std::string rec, std::vector<token>& t_answer) {
     std::cout << getTokenName(t_answer[i].type) << " - " << t_answer[i].value << "\n"; 
   }
 }
-
-
-* bool eat
-// add the out_token variable
-bool eat(std::vector<token>& tokens, size_t& pos, Token_Type expected) {
-    if (pos < tokens.size() && tokens[pos].type == expected) {
-        pos++;
-        return true;
-    }
-    std::cout << "\nError: Expected " << getTokenName(expected) << " at position " << pos << "\n";
-    return false;
-}
-
-
-
-* int expr
-int expr(std::vector<token>& t_answer, size_t& pos, std::string answer) {
-    token current_token = get_token(answer, t_answer, pos);
-    int result = 0;
-
-    if(!eat(t_answer, pos, NUMBER, answer, current_token)) { exit(1); }
-    if(!(eat(t_answer, pos, PLUS, answer, current_token) || eat(t_answer, pos, MINUS, answer, current_token))) { exit(1); }
-    if(!eat(t_answer, pos, NUMBER, answer, current_token)) { exit(1); } 
-
-    token left = t_answer[0];
-    token Op = t_answer[1];
-    token right = t_answer[2];
-
-
-    if(Op.type == PLUS) {
-    result = left.value + right.value;
-    } else { result = left.value - right.value; }
-
-    return result;
-}
-	
-* new expr
- token current_token = get_next_token();
-    int result = term(...);
-
-    while (true) {
-        if (!isOperator(current_token.type)) break;
-
-        Token_Type op = current_token.type;
-        current_token = eat(...);
-
-        int rhs = term(...);
-
-        switch (op) {
-            case PLUS: result += rhs; break;
-            case MINUS: result -= rhs; break;
-            case MULTIPLY: result *= rhs; break;
-            case DIVIDE: result /= rhs; break;
-            default:
-                std::cerr << "Unexpected operator\n";
-                exit(1);
-        }
-    }
-    return result;
 
 

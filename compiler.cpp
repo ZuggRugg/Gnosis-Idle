@@ -3,8 +3,9 @@
 // Date: 6/4/2025              //
 /////////////////////////////////
 
-// Goals for Today:
-// start creating functions like pow()?
+//TODO: start creating functions like pow(), sin(), cos(), log()
+//TODO: create some seperate function to handle matrices?
+//TODO: maybe add some extra layer like analysing the properties of the numbers? (Prime, factors, etc)
 
 #include <iostream>
 #include <string>
@@ -13,6 +14,7 @@
 #include <cctype>
 #include <iomanip>
 #include <fstream>
+#include "rand_expr.h"
 
 //data types for tokens
 enum Token_Type {
@@ -36,15 +38,15 @@ struct token {
 
 //function definitions
 token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos);
-float expr(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
-token eat(std::vector<token>& t_answer, size_t& pos, Token_Type t, std::string answer, token current_token);
-const std::string getTokenName(Token_Type t);
+float expr(std::vector<token>& t_answer, size_t& pos, const std::string answer, token& current_token);
+token eat(std::vector<token>& t_answer, size_t& pos, Token_Type t, const std::string answer, token current_token);
+const std::string getTokenName(const Token_Type t);
 void advance(size_t& pos, std::string answer, char& current);
-void skip_space(char& current, size_t& pos, std::string answer);
+void skip_space(char& current, size_t& pos, const std::string answer);
 void read_all_tokens(std::vector<token>& t_answer);
-bool isOperator(Token_Type t);
-float factor(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
-float term(std::vector<token>& t_answer, size_t& pos, std::string answer, token& current_token);
+bool isOperator(const Token_Type t);
+float factor(std::vector<token>& t_answer, size_t& pos, const std::string answer, token& current_token);
+float term(std::vector<token>& t_answer, size_t& pos, const std::string answer, token& current_token);
 void read_file(std::vector<std::string>& prompts);
 		
 // main function 
@@ -56,7 +58,7 @@ int main(void) {
   read_file(prompts);
   std::cout << "\n";
 
-  for(int i = 0; i < prompts.size(); i++) {
+  for(size_t i = 0; i < prompts.size(); i++) {
     pos = 0;
     token current_token = get_next_token(prompts[i], t_answer, pos);
     float result = expr(t_answer, pos, prompts[i], current_token);
