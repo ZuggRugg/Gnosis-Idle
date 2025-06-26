@@ -6,6 +6,7 @@
 //TODO: start creating functions like pow(), sin(), cos(), log()
 //TODO: create some seperate function to handle matrices?
 //TODO: maybe add some extra layer like analysing the properties of the numbers? (Prime, factors, etc)
+//TODO: generate some new expresssions every 2 seconds then quit after 10 seconds???
 
 #include <iostream>
 #include <string>
@@ -54,7 +55,7 @@ void read_file(std::vector<std::string>& prompts);
 // main function 
 int main(void) {
 
-  rand_func::Main(); // generate new prompts (5000 lines)
+  rand_func::Main(); // generate new prompts (20000 lines)
 
   std::vector<token> t_answer; //vector containing tokens
 
@@ -64,15 +65,15 @@ int main(void) {
   read_file(prompts);
   std::cout << "\n";
 
-  for(size_t i = 0; i < prompts.size(); i++) {
-    pos = 0;
-    token current_token = get_next_token(prompts[i], t_answer, pos);
-    float result = expr(t_answer, pos, prompts[i], current_token);
-    std::cout << i << ") " << prompts[i] << " = " << result << "\n";
-    t_answer.clear();
-  }
+  // for(size_t i = 0; i < prompts.size(); i++) {
+  //   pos = 0;
+  //   token current_token = get_next_token(prompts[i], t_answer, pos);
+  //   float result = expr(t_answer, pos, prompts[i], current_token);
+  //   std::cout << i << ") " << prompts[i] << " = " << result << "\n";
+  //   t_answer.clear();
+  // }
 
-  
+  // old cli version of main
   // while(1) {
   //   // std::string answer;
   //   // std::cout << "\nGnosis Idle> ";

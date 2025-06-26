@@ -1,15 +1,28 @@
-# TODO
+# Checklist
 - [x] preform an arbitrary amount of calculations like '3+4-8*5'
 - [x] Recognize left and right parentheses and Operator Precedence
 - [x] Handle Floating point numbers and variables
 - [x] Add support for Pos/Neg signs
 - [ ] add support for Matrices
+- [ ] Create AST and integrate
 - [ ] add support for functions
 - [ ] Rewrite and modularize everything
 - [ ] Generate random math expressions
 - [ ] Create Basic GUI (Window, Buttons, Camera)
 - [ ] create basic gameplay loop
 - [ ] show flame graphs and profiler
+
+# TODO
+- start creating functions like pow(), sin(), cos(), log()
+- create some seperate function to handle matrices?
+- maybe add some extra layer like analysing the properties of the numbers? (Prime, factors, etc)
+- generate some new expresssions every 2 seconds then quit after 10 seconds???
+- Break up the compiler.cpp file into Lexer/Parser/Interpreter
+- Make Main file where everything is executed
+- generate more complex expressions
+- use a regex library to generate more complex expressions?
+- Make this a continous thing until a limit is hit
+
 
 # Description
 This is a project where I am building a compiler/interpreter from scratch for an idle game 

@@ -8,19 +8,20 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
+#include <regex.h>
 
-#define MAX_LINES 10000
+#define MAX_LINES 20000
 
 void Main(); 
 void generate_expr(std::vector<std::string> e);
 void write_file(std::vector<std::string>& e);
 char gen_op();
 
-//TODO: use this file to generate random math expressions and then write the strings to prompts.
-
+//TODO: generate more complex expressions
+//TODO: use a regex library to generate more complex expressions?
+//TODO: Make this a continous thing until a limit is hit
 
 namespace rand_func {
-
 
   // random operator
   char gen_op() {
@@ -44,7 +45,7 @@ namespace rand_func {
     char op;
     
     for(size_t i = 0; i < MAX_LINES; i++) {
-      left = rand(); right = rand();
+      left = rand() % 10000; right = rand() % 10000;
 
     
       if ((op == '/' || op == '%') && right == 0) {
@@ -52,7 +53,8 @@ namespace rand_func {
       }
 
       op = gen_op();
-      e.emplace_back(std::to_string(left) + op + std::to_string(right));
+      s = std::to_string(left) + " " + op + " " + std::to_string(right);
+      e.emplace_back(s + " " + gen_op() + " " + std::to_string(right));
     }
   }
 
