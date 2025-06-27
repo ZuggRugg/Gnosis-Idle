@@ -7,54 +7,20 @@
 //TODO: create some seperate function to handle matrices?
 //TODO: maybe add some extra layer like analysing the properties of the numbers? (Prime, factors, etc)
 //TODO: generate some new expresssions every 2 seconds then quit after 10 seconds???
+#include "rand_expr.h"
+#include "compiler.h"
 
 #include <iostream>
 #include <string>
-#include <sstream>
 #include <vector>
 #include <cctype>
 #include <iomanip>
 #include <fstream>
 
 // for generating random expr and writing to the file
-#include "rand_expr.h"
-
-//data types for tokens
-enum Token_Type {
-  NUMBER,
-  PLUS,
-  MINUS,
-  MULTIPLY,
-  DIVIDE,
-  DOT,
-  LPAREN,
-  RPAREN,
-  MODULO,
-  EOF_
-};
-
-//token struct
-struct token {
-  Token_Type type;
-  float value;
-};
-
-//function definitions
-token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos);
-float expr(std::vector<token>& t_answer, size_t& pos, const std::string answer, token& current_token);
-token eat(std::vector<token>& t_answer, size_t& pos, Token_Type t, const std::string answer, token current_token);
-const std::string getTokenName(const Token_Type t);
-void advance(size_t& pos, std::string answer, char& current);
-void skip_space(char& current, size_t& pos, const std::string answer);
-void read_all_tokens(std::vector<token>& t_answer);
-bool isOperator(const Token_Type t);
-float factor(std::vector<token>& t_answer, size_t& pos, const std::string answer, token& current_token);
-float term(std::vector<token>& t_answer, size_t& pos, const std::string answer, token& current_token);
-void read_file(std::vector<std::string>& prompts);
 		
 // main function 
-int main(void) {
-
+void compile() {
   rand_func::Main(); // generate new prompts (20000 lines)
 
   std::vector<token> t_answer; //vector containing tokens
@@ -65,13 +31,13 @@ int main(void) {
   read_file(prompts);
   std::cout << "\n";
 
-  // for(size_t i = 0; i < prompts.size(); i++) {
-  //   pos = 0;
-  //   token current_token = get_next_token(prompts[i], t_answer, pos);
-  //   float result = expr(t_answer, pos, prompts[i], current_token);
-  //   std::cout << i << ") " << prompts[i] << " = " << result << "\n";
-  //   t_answer.clear();
-  // }
+  for(size_t i = 0; i < prompts.size(); i++) {
+    pos = 0;
+    token current_token = get_next_token(prompts[i], t_answer, pos);
+    float result = expr(t_answer, pos, prompts[i], current_token);
+    std::cout << i << ") " << prompts[i] << " = " << result << "\n";
+    t_answer.clear();
+  }
 
   // old cli version of main
   // while(1) {
