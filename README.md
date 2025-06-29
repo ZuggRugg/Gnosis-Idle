@@ -23,6 +23,9 @@
 - use a regex library to generate more complex expressions?
 - Make this a continous thing until a limit is hit
 
+# Compile 
+Using the makefile you can either do 'run' 'compile' or 'profile' as targets
+The Profiler used is gprof, this assumes that you are using g++ as the compiler
 
 # Description
 This is a project where I am building a compiler/interpreter from scratch for an idle game 

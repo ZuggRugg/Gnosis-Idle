@@ -7,6 +7,7 @@
 //TODO: create some seperate function to handle matrices?
 //TODO: maybe add some extra layer like analysing the properties of the numbers? (Prime, factors, etc)
 //TODO: generate some new expresssions every 2 seconds then quit after 10 seconds???
+
 #include "rand_expr.h"
 #include "compiler.h"
 
@@ -21,6 +22,7 @@
 		
 // main function 
 void compile() {
+  
   rand_func::Main(); // generate new prompts (20000 lines)
 
   std::vector<token> t_answer; //vector containing tokens
