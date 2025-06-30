@@ -37,7 +37,7 @@ void compile() {
     pos = 0;
     token current_token = get_next_token(prompts[i], t_answer, pos);
     float result = expr(t_answer, pos, prompts[i], current_token);
-    std::cout << i << ") " << prompts[i] << " = " << result << "\n";
+    // std::cout << i << ") " << prompts[i] << " = " << result << "\n";
     t_answer.clear();
   }
 

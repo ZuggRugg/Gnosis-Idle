@@ -8,37 +8,27 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
-#include <regex.h>
 
 #define MAX_LINES 20000
 
 void Main(); 
-void generate_expr(std::vector<std::string> e);
+// void generate_expr(std::vector<std::string> e);
 void write_file(std::vector<std::string>& e);
 char gen_op();
+std::string gen_expr(int depth);
 
 //TODO: generate more complex expressions
-//TODO: use a regex library to generate more complex expressions?
 //TODO: Make this a continous thing until a limit is hit
 
 namespace rand_func {
 
   // random operator
   char gen_op() {
-    int f = rand() % 5;
-    char op;
-
-    if(f == 0) { op = '+';}
-    else if(f == 1) { op = '-';}
-    else if(f == 2) { op = '*';}
-    else if(f == 3) { op = '/';}
-    else if(f == 4) { op = '%';}
-
-    return op;
+    const char ops[] = {'+', '-', '*', '/', '%'};
+    return ops[rand() % 5];
   }
 
-
-  //generate simple expr '# op #'
+  // generate simple expr '# op #'
   void generate_expr(std::vector<std::string>& e) { 
     int left, right;
     std::string s;
@@ -58,7 +48,6 @@ namespace rand_func {
     }
   }
 
-
   //write vector to file
   void write_file(const std::vector<std::string>& e) { 
     std::ofstream out("prompts.txt");
@@ -68,12 +57,11 @@ namespace rand_func {
     out.close();
   }
 
-
   // run everything 
   void Main() {
     std::vector<std::string> e;
     e.reserve(MAX_LINES);
-    
+
     srand(time(0));
     generate_expr(e);
     write_file(e);
