@@ -12,13 +12,21 @@
 #define MAX_LINES 20000
 
 void Main(); 
-// void generate_expr(std::vector<std::string> e);
+void generate_expr(std::vector<std::string> e);
 void write_file(std::vector<std::string>& e);
 char gen_op();
 std::string gen_expr(int depth);
 
-//TODO: generate more complex expressions
-//TODO: Make this a continous thing until a limit is hit
+
+// function p_back() looks backwards at previous token
+// function paren_check() would check the amount of parentheses and implement correctly
+// IF NUM | RPAREN, OP
+// IF OP | NUM
+// IF LPAREN | paren_check() then NUM
+// IF RPAREN | OP
+// I could fix the length of the expression based on the amount of parentheses maybe
+// (definitly not length of string)
+
 
 namespace rand_func {
 
