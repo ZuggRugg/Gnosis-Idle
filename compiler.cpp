@@ -4,7 +4,6 @@
 /////////////////////////////////
 
 //TODO: start creating functions like pow(), sin(), cos(), log()
-//TODO: create some seperate function to handle matrices?
 //TODO: maybe add some extra layer like analysing the properties of the numbers? (Prime, factors, etc)
 //TODO: generate some new expresssions every 2 seconds then quit after 10 seconds???
 
@@ -19,17 +18,19 @@
 #include <iomanip>
 #include <fstream>
 
+#define CYCLE_NUM 5
+
 // for generating random expr and writing to the file
 		
 // main function 
-void compile() {
-  
-  generate::gen(); // generate new prompts (25000 lines)
+int main(void) {
+  int timer = 0;    // how many times you want to repeat cycle
+  size_t pos = 0;
 
   std::vector<token> t_answer; //vector containing tokens
+  std::vector<std::string> prompts; // vector containing strings from file
 
-  size_t pos = 0;
-  std::vector<std::string> prompts;
+  while(timer < CYCLE_NUM) {
 
   read_file(prompts);
   std::cout << "\n";
@@ -38,20 +39,15 @@ void compile() {
     pos = 0;
     token current_token = get_next_token(prompts[i], t_answer, pos);
     float result = expr(t_answer, pos, prompts[i], current_token);
-    // std::cout << i << ") " << prompts[i] << " = " << result << "\n";
-    t_answer.clear();
   }
+  
+  // clear up vectors after use for next batch of processing
+  prompts.clear();
+  t_answer.clear();
 
-  // old cli version of main
-  // while(1) {
-  //   // std::string answer;
-  //   // std::cout << "\nGnosis Idle> ";
-  //   // getline(std::cin,answer);
-  //   // if(answer == "quit") { exit(1); }
-  //   token current_token = get_next_token(answer, t_answer, pos);
-  //   float result = expr(t_answer, pos, answer, current_token);
-  //   std::cout << "final answer = " << result << "\n\n";
-  //   read_all_tokens(t_answer);
+  std::cout << "Cycle #" << timer+1 << " has finished running!\n";
+  ++timer;
+  }
 }
 
 
@@ -91,10 +87,8 @@ const std::string getTokenName(Token_Type t)
 //iterates through string and classifies each char as a simple token
 token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& pos) {
 
-  char current = '0';
-
   while(1) {
-    current = answer[pos];
+    char current = answer[pos];
 
     if (current == '+') { 
       t_answer.push_back({PLUS, 999});
@@ -154,7 +148,6 @@ token get_next_token(std::string answer, std::vector<token>& t_answer, size_t& p
 	num_expr += current;
 	advance(pos, answer, current);
 	}
-
       }
 
       number = std::stof(num_expr);

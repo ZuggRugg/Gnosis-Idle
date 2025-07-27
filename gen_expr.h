@@ -9,18 +9,19 @@
 #include <vector>
 #include <fstream>
 
-#define MAX_LINES 25000
-
+#define MAX_LINES 500000
 
 enum class Operator {
     ADD,
     SUBTRACT,
     MULTIPLY,
-    DIVIDE
+    DIVIDE,
+    MODULO
 };
 
 
 namespace generate {
+
 // Function to get operator symbol
 std::string getOperatorSymbol(Operator op) {
     switch (op) {
@@ -32,6 +33,8 @@ std::string getOperatorSymbol(Operator op) {
             return "*";
         case Operator::DIVIDE:
             return "/";
+        case Operator::MODULO:
+	  return "%";
     }
     return "";
 }

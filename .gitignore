@@ -5,4 +5,5 @@
 a-compiler.ii
 a-compiler.o
 a-compiler.s 
+prompts.txt
 !README.org

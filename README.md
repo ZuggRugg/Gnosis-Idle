@@ -3,11 +3,10 @@
 - [x] Recognize left and right parentheses and Operator Precedence
 - [x] Handle Floating point numbers and variables
 - [x] Add support for Pos/Neg signs
-- [ ] add support for Matrices
 - [ ] Create AST and integrate
 - [ ] add support for functions
 - [ ] Rewrite and modularize everything
-- [ ] Generate random math expressions
+- [x] Generate random math expressions
 - [ ] Create Basic GUI (Window, Buttons, Camera)
 - [ ] create basic gameplay loop
 - [ ] show flame graphs and profiler
@@ -24,7 +23,11 @@
 - Make this a continous thing until a limit is hit
 
 # Compile 
-Using the makefile you can either do 'run' 'compile' or 'profile' as targets
+Using the makefile you can either do 
+- 'run'     (compiles the program and runs it)
+- 'compile' (compiles the program)
+- 'profile' (compiles, runs, and runs gprof and saves results to anaylsis.txt)
+as targets for the Makefile
 The Profiler used is gprof, this assumes that you are using g++ as the compiler
 
 # Description
@@ -37,5 +40,6 @@ You will get randomized choices on how to improve your equation for the game, bu
 would be the least detrimental for you in the long run, The Game would start preforming thousands of calculations through the Interpreter
 with an Option to run the Program through an Input file to see how Optimized the Code is
 
-## Implementation 
+## Requirements
 This Project requires C++11 or greater, and Raylib as a dependency
+This Project also requires GNU Make and the g++ compiler
