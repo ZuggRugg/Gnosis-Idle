@@ -5,7 +5,7 @@
 - [x] Add support for Pos/Neg signs
 - [ ] Create AST and integrate
 - [ ] add support for functions
-- [ ] Rewrite and modularize everything
+- [x] Rewrite and modularize everything
 - [x] Generate random math expressions
 - [ ] Create Basic GUI (Window, Buttons, Camera)
 - [ ] create basic gameplay loop

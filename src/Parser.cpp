@@ -1,8 +1,9 @@
 #include <iostream>
 #include <string>
 
-#include "Lexer.h"
 #include "token.h"
+#include "Parser.h"
+#include "Lexer.h"
 
 namespace Parser {
 
@@ -36,19 +37,19 @@ namespace Parser {
 
     // if no condition satisfied then error
     else { std::cerr << "Error!"; 
-      read_all_tokens(t_answer);
+      Lexer::read_all_tokens(t_answer);
       exit(1);}
   }
 
 
   token eat(std::vector<token>& t_answer, size_t& pos, Token_Type expected, std::string answer, token current_token) {
     if (current_token.type == expected) {
-      current_token = get_next_token(answer, t_answer, pos);
+      current_token = Lexer::get_next_token(answer, t_answer, pos);
       return current_token;
     }
     else {
-      std::cout << "\nError: Expected " << getTokenName(expected) << " at position " << pos << "\n";
-      std::cout << "Instead we got " << getTokenName(current_token.type) << "\n";
+      std::cout << "\nError: Expected " << Token::getTokenName(expected) << " at position " << pos << "\n";
+      std::cout << "Instead we got " << Token::getTokenName(current_token.type) << "\n";
       exit(1);
     }
   }

@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <cctype>
+#include <iomanip>
 
 #include "token.h"
 #include "Lexer.h"
@@ -11,7 +13,7 @@ namespace Lexer {
   // read the entire token array
 void read_all_tokens(std::vector<token>& t_answer) {
   for(size_t i = 0; i < t_answer.size(); i++) {
-    std::cout << std::left << std::setw(10) << getTokenName(t_answer[i].type) <<  
+    std::cout << std::left << std::setw(10) << Token::getTokenName(t_answer[i].type) <<  
     std::right << std::setw(10) << t_answer[i].value << "\n"; 
     }
 }
