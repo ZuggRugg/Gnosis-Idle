@@ -4,8 +4,7 @@ I can multithreading by breaking up the prompts.txt file into chunks and then ma
 the back of the vector, additionally I need to see if I can get rid of some vector operations or get rid of the vectors
 alltogether so that I can speed up the program a bit more
 
-
-* Mmap 
+** Mmap 
 Once I multi-thread I could also use Mmap to read the file faster by breaking everything
 into memory chunks on the dynamic heap of the program
 

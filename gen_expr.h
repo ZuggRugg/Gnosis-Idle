@@ -9,7 +9,7 @@
 #include <vector>
 #include <fstream>
 
-#define MAX_LINES 500000
+#define MAX_LINES 600000
 
 enum class Operator {
     ADD,
